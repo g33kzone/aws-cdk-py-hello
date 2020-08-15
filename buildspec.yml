@@ -11,5 +11,4 @@ phases:
   build:
     commands:
       - npx cdk bootstrap
-      - npx cdk synth
       - npx cdk deploy '*' --require-approval never
