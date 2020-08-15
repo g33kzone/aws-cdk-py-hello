@@ -1,0 +1,13 @@
+version: "0.2"
+phases:
+  install:
+    runtime-version:
+      nodejs: latest
+      python: 3.8
+    commands:
+       - npm install aws-cdk
+       - npm update
+       - python -m pip install -r requirements.txt
+  build:
+    commands:
+      - cdk synth
