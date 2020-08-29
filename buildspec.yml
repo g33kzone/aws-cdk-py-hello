@@ -10,5 +10,6 @@ phases:
        - python -m pip install -r requirements.txt
   build:
     commands:
+      - ENV_VALUE=dev
       - npx cdk bootstrap
       - npx cdk deploy cdkworkshop --require-approval never

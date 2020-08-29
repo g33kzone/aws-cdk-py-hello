@@ -1,3 +1,4 @@
+import os
 from aws_cdk import (
     core as core,
     aws_lambda as _lambda,
@@ -14,11 +15,13 @@ class CdkworkshopStack(core.Stack):
 
         # self.node.apply_aspect(core.Aws.ACCOUNT_ID)
 
+        dap_environment = os.environ["ENV_VALUE"]
+
         src_bucket_name = self.node.try_get_context("src_bucket_name")
-        src_bucket_name = src_bucket_name.replace("-env-", "-dev-")
+        src_bucket_name = src_bucket_name.replace("env", dap_environment)
 
         dest_bucket_name = self.node.try_get_context("dest_bucket_name")
-        dest_bucket_name = dest_bucket_name.replace("-env-", "-dev-")
+        dest_bucket_name = dest_bucket_name.replace("env", dap_environment)
 
         source_bucket = s3.Bucket(
             self, 'sourceBucket',
