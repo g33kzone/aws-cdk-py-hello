@@ -22,7 +22,11 @@ setuptools.setup(
         "aws-cdk.core==1.60.0",
         "aws-cdk.aws_iam==1.60.0",
         "aws-cdk.aws_s3==1.60.0",
-        "aws-cdk.aws_s3_notifications==1.60.0"
+        "aws-cdk.aws_s3_notifications==1.60.0",
+        "aws-cdk.aws-certificatemanager==1.60.0",
+        "aws-cdk.aws-elasticloadbalancingv2==1.60.0",
+        "aws-cdk.aws-route53==1.60.0",
+        "aws-cdk.aws-sns-subscriptions==1.60.0"
     ],
 
     python_requires=">=3.6",

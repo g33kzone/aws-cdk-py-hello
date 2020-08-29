@@ -2,6 +2,8 @@
   "app": "python3 app.py",
   "context": {
     "@aws-cdk/core:enableStackNameDuplicates": "true",
-    "aws-cdk:enableDiffNoFail": "true"
+    "aws-cdk:enableDiffNoFail": "true",
+    "src_bucket_name":"source-env-g33kzone",
+    "dest_bucket_name":"destination-env-g33kzone"
   }
 }

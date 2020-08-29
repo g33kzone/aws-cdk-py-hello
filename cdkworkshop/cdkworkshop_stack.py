@@ -1,7 +1,6 @@
 from aws_cdk import (
-    core,
+    core as core,
     aws_lambda as _lambda,
-    aws_apigateway as apigw,
     aws_iam as iam,
     aws_s3 as s3,
     aws_s3_notifications as s3_notify,
@@ -15,16 +14,22 @@ class CdkworkshopStack(core.Stack):
 
         # self.node.apply_aspect(core.Aws.ACCOUNT_ID)
 
+        src_bucket_name = self.node.try_get_context("src_bucket_name")
+        src_bucket_name = src_bucket_name.replace("-env-", "-dev-")
+
+        dest_bucket_name = self.node.try_get_context("dest_bucket_name")
+        dest_bucket_name = dest_bucket_name.replace("-env-", "-dev-")
+
         source_bucket = s3.Bucket(
             self, 'sourceBucket',
-            bucket_name='source-g33kzone',
+            bucket_name=src_bucket_name,
             public_read_access=False,
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL
         )
 
         destination_bucket = s3.Bucket(
             self, 'destinationBucket',
-            bucket_name='destination-g33kzone',
+            bucket_name=dest_bucket_name,
             public_read_access=False,
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL
         )
@@ -32,7 +37,12 @@ class CdkworkshopStack(core.Stack):
         lambda_iam_role = iam.Role(
             self, 'lambdaRole',
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
-            role_name="lambda-hello-role"
+            role_name="lambda-hello-role",
+            managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name(
+                "AmazonS3FullAccess"),
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                "CloudWatchFullAccess"
+            )]
         )
 
         lambda_layer = _lambda.LayerVersion(
@@ -54,15 +64,11 @@ class CdkworkshopStack(core.Stack):
             memory_size=128,
             environment={
                 'env_test_key': 'AWS CDK',
+                'destination_bucket': dest_bucket_name
             }
         )
 
-        # notification = s3_notify.LambdaDestination(my_lambda)
+        notification = s3_notify.LambdaDestination(my_lambda)
 
-        # source_bucket.add_event_notification(
-        #     s3.EventType.OBJECT_CREATED, notification)
-
-        # apigw.LambdaRestApi(
-        #     self, 'Endpoint',
-        #     handler=my_lambda,
-        # )
+        source_bucket.add_event_notification(
+            s3.EventType.OBJECT_CREATED_PUT, notification)
