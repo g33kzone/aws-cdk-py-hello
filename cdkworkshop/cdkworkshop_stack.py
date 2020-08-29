@@ -5,6 +5,7 @@ from aws_cdk import (
     aws_iam as iam,
     aws_s3 as s3,
     aws_s3_notifications as s3_notify,
+    aws_s3_deployment as s3deploy
 )
 
 
@@ -75,3 +76,10 @@ class CdkworkshopStack(core.Stack):
 
         source_bucket.add_event_notification(
             s3.EventType.OBJECT_CREATED_PUT, notification)
+
+        s3deploy.BucketDeployment(
+            self, 'DeployGlueJob',
+            sources=[s3deploy.Source.asset("glue")],
+            destination_bucket=destination_bucket,
+            destination_key_prefix="web/dap"
+        )
